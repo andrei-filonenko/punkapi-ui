@@ -5,12 +5,12 @@ import {
   BeerName,
   Abv,
   Description,
-  ErrorContainer,
   BeerCardContainer,
   ImgContainer,
   BodyContainer,
   ActionButtons,
 } from './styled'
+import ErrorState from '../../app/components/ErrorState'
 
 const DEFAULT_IMAGE = 'https://images.punkapi.com/v2/keg.png'
 
@@ -43,20 +43,13 @@ export default function BeerCard({
     </>
   )
 
-  const error = (
-    <ErrorContainer role="alert">
-      <p className="font-bold">Error</p>
-      <p>{errorMessage}</p>
-    </ErrorContainer>
-  )
-
   return (
     <BeerCardContainer state={state}>
       <ImgContainer>
         <img alt="" src={beer.image_url || DEFAULT_IMAGE} />
       </ImgContainer>
       <BodyContainer>
-        {state === 'failure' ? error : content}
+        {state === 'failure' ? <ErrorState>{errorMessage}</ErrorState> : content}
         <ActionButtons>
           <Button onClick={onFetchBeer} primary loading={isLoading}>
             Get Random Beer

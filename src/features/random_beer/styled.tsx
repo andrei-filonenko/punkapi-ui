@@ -18,8 +18,6 @@ export const BeerCardContainer = styled.div<LoadingProps>`
     h-full`
   }
 `
-export const ErrorContainer = tw.div`flex h-64 flex-col flex-1 justify-center text-red-700 p-4`
-
 export const ImgContainer = styled.div`
   ${tw`flex-none w-1/5 relative text-center h-80`}
   > img {
