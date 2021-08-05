@@ -1,10 +1,14 @@
+import React, { ReactNode } from "react"
 import tw, { styled } from "twin.macro"
+import Spinner from './Spinner'
 
-interface Props {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    children?: ReactNode 
     primary?: boolean
-}
+    loading?: boolean
+} 
 
-const Button = styled.button<Props>`
+const ButtonContainer = styled.button<Props>`
   ${({ primary }) =>
     primary
       ? tw`
@@ -25,8 +29,16 @@ const Button = styled.button<Props>`
      justify-center 
      py-2
   `}
-    :disabled {
+  :disabled {
     ${tw`opacity-75`}
-    }
-    `
-export default Button
+  }
+`
+
+export default function Button({ primary, loading, disabled, children, ...rest}: Props) {
+  return (
+    <ButtonContainer {...{disabled: disabled || loading, primary}} {...rest}>
+      {loading && <Spinner />}
+      {children}
+    </ButtonContainer>
+  )
+}

@@ -1,7 +1,15 @@
 import { IBeer } from '../../app/schema'
 import Button from '../../app/components/Button'
 import {
-  Header, BeerName, Abv, Description, ErrorContainer, BeerCardContainer, ImgContainer, BodyContainer, ActionButtons
+  Header,
+  BeerName,
+  Abv,
+  Description,
+  ErrorContainer,
+  BeerCardContainer,
+  ImgContainer,
+  BodyContainer,
+  ActionButtons,
 } from './styled'
 
 const DEFAULT_IMAGE = 'https://images.punkapi.com/v2/keg.png'
@@ -33,12 +41,10 @@ export default function BeerCard({
         <p>{beer.description}</p>
       </Description>
     </>
-  ) 
+  )
 
   const error = (
-    <ErrorContainer
-      role="alert"
-    >
+    <ErrorContainer role="alert">
       <p className="font-bold">Error</p>
       <p>{errorMessage}</p>
     </ErrorContainer>
@@ -52,10 +58,10 @@ export default function BeerCard({
       <BodyContainer>
         {state === 'failure' ? error : content}
         <ActionButtons>
-          <Button onClick={onFetchBeer} primary disabled={isLoading}>
+          <Button onClick={onFetchBeer} primary loading={isLoading}>
             Get Random Beer
           </Button>
-          <Button onClick={onFetchNonAlcoholicBeer} disabled={isLoading}>
+          <Button onClick={onFetchNonAlcoholicBeer} loading={isLoading}>
             Random Alcohol-Free
           </Button>
         </ActionButtons>
