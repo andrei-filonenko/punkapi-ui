@@ -1,12 +1,12 @@
-import React, { ReactNode } from "react"
-import tw, { styled } from "twin.macro"
+import React, { ReactNode } from 'react'
+import tw, { styled } from 'twin.macro'
 import Spinner from './Spinner'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    children?: ReactNode 
-    primary?: boolean
-    loading?: boolean
-} 
+  children?: ReactNode
+  primary?: boolean
+  loading?: boolean
+}
 
 const ButtonContainer = styled.button<Props>`
   ${({ primary }) =>
@@ -34,9 +34,15 @@ const ButtonContainer = styled.button<Props>`
   }
 `
 
-export default function Button({ primary, loading, disabled, children, ...rest}: Props) {
+export default function Button({
+  primary,
+  loading,
+  disabled,
+  children,
+  ...rest
+}: Props) {
   return (
-    <ButtonContainer {...{disabled: disabled || loading, primary}} {...rest}>
+    <ButtonContainer {...{ disabled: disabled || loading, primary }} {...rest}>
       {loading && <Spinner />}
       {children}
     </ButtonContainer>

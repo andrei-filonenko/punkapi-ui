@@ -55,16 +55,14 @@ const initialState = (
   </EmptyState>
 )
 
-
 export default function BeerList() {
   const maybeBeers = useAppSelector(getBeeers)
   const isLoading = useAppSelector(getLoadingState)
-  const error = useAppSelector(getError) 
+  const error = useAppSelector(getError)
 
   const isNeverLoaded = !error && !isLoading && maybeBeers === undefined
   const beers = maybeBeers || []
   const isNotFound = !error && !isLoading && !isNeverLoaded && !beers.length
-  
 
   return (
     <BeerListContainer>

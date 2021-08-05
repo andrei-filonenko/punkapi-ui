@@ -49,7 +49,11 @@ export default function BeerCard({
         <img alt="" src={beer.image_url || DEFAULT_IMAGE} />
       </ImgContainer>
       <BodyContainer>
-        {state === 'failure' ? <ErrorState>{errorMessage}</ErrorState> : content}
+        {state === 'failure' ? (
+          <ErrorState>{errorMessage}</ErrorState>
+        ) : (
+          content
+        )}
         <ActionButtons>
           <Button onClick={onFetchBeer} primary loading={isLoading}>
             Get Random Beer

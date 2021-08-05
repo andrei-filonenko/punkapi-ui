@@ -18,11 +18,7 @@ export function SearchBar({
   return (
     <SearchBarContainer className={errorMessage ? 'error' : ''}>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      <input
-        onChange={handleChange}
-        type="text"
-        placeholder={placeholder}
-      />
+      <input onChange={handleChange} type="text" placeholder={placeholder} />
       <Button primary disabled={!!errorMessage} className="px-2">
         Find my beer
       </Button>

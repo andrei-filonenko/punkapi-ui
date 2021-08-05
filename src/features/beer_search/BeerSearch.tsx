@@ -37,21 +37,25 @@ export default function BeerSearch() {
     [searchType]
   )
 
-  const handleSubmit = useCallback((e) => {
-    e.preventDefault()
-    if (searchType === 'name') {
-      dispatch(fetchBeersByName(text))
-    } else {
-      const date = new Date(Date.parse(text))
-      dispatch(fetchBeersByDate(date))
-    }
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault()
+      if (searchType === 'name') {
+        dispatch(fetchBeersByName(text))
+      } else {
+        const date = new Date(Date.parse(text))
+        dispatch(fetchBeersByDate(date))
+      }
+    },
+    [text, searchType, dispatch]
+  )
 
-  }, [text, searchType, dispatch]) 
-
-  const handleSearchType = useCallback((t) => {
-    setSearchType(t)
-  }, [setSearchType]) 
-
+  const handleSearchType = useCallback(
+    (t) => {
+      setSearchType(t)
+    },
+    [setSearchType]
+  )
 
   return (
     <SearchSectionContainer>

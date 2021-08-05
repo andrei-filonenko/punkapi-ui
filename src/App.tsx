@@ -14,9 +14,8 @@ function App() {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(fetchRandomBeer()) 
-  }, [dispatch])  
-
+    dispatch(fetchRandomBeer())
+  }, [dispatch])
 
   return (
     <div className="App">

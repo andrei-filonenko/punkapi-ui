@@ -88,12 +88,12 @@ export const BeerName = String.withBrand('BeerName').withConstraint(
     'Search text must contain only hyphens, letters, numbers and spaces'
 )
 
-export const FormattedDate = BeerName.withBrand(
-  'FormattedDate'
-).withConstraint((str) => {
-  // FIXME: a proper parser should be implemented, or better use a standard calendar pop up
-  return !!Date.parse(str) || 'Can not parse date, use ISO date format'
-})
+export const FormattedDate = BeerName.withBrand('FormattedDate').withConstraint(
+  (str) => {
+    // FIXME: a proper parser should be implemented, or better use a standard calendar pop up
+    return !!Date.parse(str) || 'Can not parse date, use ISO date format'
+  }
+)
 
 export const BeerQueryParams = Record({
   abv_gt: Number.optional(), // Returns all beers with ABV greater than the supplied number
@@ -111,7 +111,7 @@ export const BeerQueryParams = Record({
   food: String.optional(), // Returns all beers matching the supplied food string, this performs a fuzzy match, if you need to add spaces just add an underscore (_).
   ids: String.optional(), // (id|id|...)
   per_page: Number.optional(), // Returns number of beers per page, max=80
-  page: Number.optional() // Returns a page number  
+  page: Number.optional(), // Returns a page number
 })
 
 export type IBeerQueryParams = Static<typeof BeerQueryParams>

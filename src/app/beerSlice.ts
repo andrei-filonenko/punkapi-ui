@@ -1,4 +1,9 @@
-import { createAction, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  createAction,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from '@reduxjs/toolkit'
 import { IBeer } from './schema'
 import { RootState } from './store'
 import { getAllNonAlcoholicBeers } from '../features/random_beer/selectors'
@@ -11,7 +16,7 @@ export interface Error {
 }
 
 export interface IBeerState {
-  randomBeerState: 'idle' | 'loading' | 'failure',
+  randomBeerState: 'idle' | 'loading' | 'failure'
   byId: { [id: number]: IBeer }
   randomBeer?: IBeer
   isNonAlcoholicBeerReceived?: boolean
@@ -29,29 +34,20 @@ export const initialState = {
 
 type ApiConfig = { state: RootState }
 
-export const fetchBeersByName = createAsyncThunk<
-  IBeer[],
-  string,
-  ApiConfig
->(
+export const fetchBeersByName = createAsyncThunk<IBeer[], string, ApiConfig>(
   'beers/fetchBeersByName',
   (beer_name, thumpApi) => {
     return getBeers({ beer_name }).catch(thumpApi.rejectWithValue)
   }
 )
 
-export const fetchBeersByDate = createAsyncThunk<
-  IBeer[],
-  Date,
-  ApiConfig
->(
+export const fetchBeersByDate = createAsyncThunk<IBeer[], Date, ApiConfig>(
   'beers/fetchBeersDate',
   (d, thumpApi) => {
-    const brewed_before = formatDate(d) 
+    const brewed_before = formatDate(d)
     return getBeers({ brewed_before }).catch(thumpApi.rejectWithValue)
   }
 )
-
 
 export const nonAlcoholicLoaded = createAction<void>('beers/nonAlcoholicLoaded')
 export const addBeers = createAction<IBeer[]>('beers/addBeers')

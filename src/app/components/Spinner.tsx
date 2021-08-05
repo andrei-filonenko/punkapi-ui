@@ -1,7 +1,7 @@
 export default function Spinner({ className }: { className?: string }) {
-  let cn = 'spinner-icon animate-spin mx-2 h-5 w-5'  
+  let cn = 'spinner-icon animate-spin mx-2 h-5 w-5'
   if (className) {
-      cn = `${cn} ${className}` 
+    cn = `${cn} ${className}`
   }
   return (
     <svg

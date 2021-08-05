@@ -9,5 +9,5 @@ import { RootState } from '../../app/store'
  */
 export const getAllNonAlcoholicBeers = (state: RootState) =>
   Object.values(state.beers.byId).filter((beer) => {
-      return !!beer.abv && (beer.abv <= 0.51)
+    return !!beer.abv && beer.abv <= 0.51
   })
