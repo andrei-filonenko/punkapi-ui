@@ -57,6 +57,11 @@ export default function BeerSearch() {
     <SearchSectionContainer>
       <form className="filter" onSubmit={handleSubmit}>
         <SearchBar
+          placeholder={
+            searchType === 'date'
+              ? 'Type a date beer brewed before e.g. 2019 or 2018-10'
+              : 'Beer'
+          }
           errorMessage={validationMessage}
           onChange={handleTextUpdate}
         />

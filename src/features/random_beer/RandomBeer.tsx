@@ -9,7 +9,7 @@ const getBeer = (state: RootState) => state.beers.randomBeer || null
 
 const getPanelState = (state: RootState) => state.beers.randomBeerState
 
-const getError = (state: RootState) => state.beers.lastError
+const getError = (state: RootState) => state.beers.randomBeerError
 
 export default function RandomBeer() {
   const dispatch = useDispatch()

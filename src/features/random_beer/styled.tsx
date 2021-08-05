@@ -4,11 +4,11 @@
 import tw, { styled } from 'twin.macro'
 
 interface LoadingProps {
-  state: 'idle' | 'loading' | 'failure'
+  state?: 'idle' | 'loading' | 'failure'
 }
 
 export const BeerCardContainer = styled.div<LoadingProps>`
-  ${({ state }) => state === 'loading' && tw`opacity-50`}
+  ${({ state = 'idle' }) => state === 'loading' && tw`opacity-50`}
   ${tw`
     transition-opacity duration-200
     md:rounded-md

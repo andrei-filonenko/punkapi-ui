@@ -14,12 +14,15 @@ export interface IBeerState {
   randomBeerState: 'idle' | 'loading' | 'failure',
   byId: { [id: number]: IBeer }
   randomBeer?: IBeer
-  isNonAlcoholicBeerReceied?: boolean
-  lastError?: Error
+  isNonAlcoholicBeerReceived?: boolean
+  randomBeerError?: Error
+  beerListError?: Error
   displayItems?: IBeer[]
+  areBeersLoading: boolean
 }
 
 export const initialState = {
+  areBeersLoading: false,
   randomBeerState: 'idle',
   byId: {},
 } as IBeerState
@@ -71,7 +74,7 @@ export const fetchRandomBeer = createAsyncThunk<
       return nextBeer
     }
     // let's see if the beers are already in the cache
-    if (state.beers.isNonAlcoholicBeerReceied) {
+    if (state.beers.isNonAlcoholicBeerReceived) {
       const beers = getAllNonAlcoholicBeers(state)
       // if so pick random one that's not displayed
       return pickRandom(beers.filter((b) => b.id !== currentBeerId))
@@ -98,7 +101,7 @@ export const beerSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(nonAlcoholicLoaded, (state, action) => {
-        state.isNonAlcoholicBeerReceied = true
+        state.isNonAlcoholicBeerReceived = true
       })
       .addCase(addBeers, (state, action) => {
         for (const beer of action.payload) {
@@ -116,13 +119,35 @@ export const beerSlice = createSlice({
       })
       .addCase(fetchRandomBeer.rejected, (state, action) => {
         state.randomBeerState = 'failure'
-        state.lastError = action.error
+        state.randomBeerError = action.error
       })
       .addCase(fetchBeersByDate.fulfilled, (state, action) => {
+        state.areBeersLoading = false
+        delete state.beerListError
         state.displayItems = action.payload
       })
       .addCase(fetchBeersByName.fulfilled, (state, action) => {
+        state.areBeersLoading = false
+        delete state.beerListError
         state.displayItems = action.payload
+      })
+      .addCase(fetchBeersByDate.pending, (state) => {
+        delete state.beerListError
+        state.areBeersLoading = true
+      })
+      .addCase(fetchBeersByName.pending, (state, action) => {
+        delete state.beerListError
+        state.areBeersLoading = true
+      })
+      .addCase(fetchBeersByDate.rejected, (state, action) => {
+        state.areBeersLoading = false
+        state.beerListError = action.error
+        state.displayItems = []
+      })
+      .addCase(fetchBeersByName.rejected, (state, action) => {
+        state.areBeersLoading = false
+        state.beerListError = action.error
+        state.displayItems = []
       })
   },
 })

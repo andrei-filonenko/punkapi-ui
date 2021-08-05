@@ -1,16 +1,19 @@
-import React from 'react';
-import Button from '../../app/components/Button';
-import { SearchBarContainer, ErrorMessage } from "./styled";
+import React from 'react'
+import Button from '../../app/components/Button'
+import { SearchBarContainer, ErrorMessage } from './styled'
 
 export function SearchBar({
-  onChange, errorMessage,
+  onChange,
+  errorMessage,
+  placeholder,
 }: {
-  onChange: (txt: string) => void;
-  errorMessage?: string;
+  onChange: (txt: string) => void
+  errorMessage?: string
+  placeholder: string
 }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
-  };
+    onChange(e.target.value)
+  }
 
   return (
     <SearchBarContainer className={errorMessage ? 'error' : ''}>
@@ -18,14 +21,11 @@ export function SearchBar({
       <input
         onChange={handleChange}
         type="text"
-        placeholder="type the name to start a search" />
-      <Button
-        primary
-        disabled={!!errorMessage}
-        className="px-2"
-      >
+        placeholder={placeholder}
+      />
+      <Button primary disabled={!!errorMessage} className="px-2">
         Find my beer
       </Button>
     </SearchBarContainer>
-  );
+  )
 }
