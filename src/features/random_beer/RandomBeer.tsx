@@ -5,11 +5,13 @@ import { useDispatch } from 'react-redux'
 import { fetchRandomBeer } from '../../app/beerSlice'
 import { RootState } from '../../app/store'
 
+
 const getBeer = (state: RootState) => state.beers.randomBeer || null
 
 const getPanelState = (state: RootState) => state.beers.randomBeerState
 
 const getError = (state: RootState) => state.beers.randomBeerError
+
 
 export default function RandomBeer() {
   const dispatch = useDispatch()
@@ -17,11 +19,6 @@ export default function RandomBeer() {
   const beer = useAppSelector(getBeer)
   const panelState = useAppSelector(getPanelState)
   const error = useAppSelector(getError)
-
-
-  useEffect(() => {
-    dispatch(fetchRandomBeer()) 
-  }, [dispatch])  
 
   const fetchBeer = useCallback(() => {
     dispatch(fetchRandomBeer())
