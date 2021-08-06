@@ -40,6 +40,9 @@ export default function BeerSearch() {
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault()
+      if (!text?.length) {
+        return
+      }
       if (searchType === 'name') {
         dispatch(fetchBeersByName(text))
       } else {

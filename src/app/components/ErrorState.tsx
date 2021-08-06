@@ -24,7 +24,7 @@ const ErrorStateStyled = styled.div`
 
 export default function ErrorState({ children, subject, ...rest }: Props) {
   return (
-    <ErrorStateStyled {...rest}>
+    <ErrorStateStyled role="alert" {...rest}>
       <div className="icon">⚠</div>
       <div className="subject">{subject || 'Error'}</div>
       <div className="message">{children}</div>

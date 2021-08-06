@@ -30,12 +30,12 @@ export default function BeerCard({
   state = 'idle',
 }: Props) {
   const isLoading = state === 'loading'
-
+  const abv = `Abv. ${beer.abv}%`
   const content = (
     <>
       <Header>
-        <BeerName>{beer.name}</BeerName>
-        <Abv>Abv.&nbsp;{beer.abv}%</Abv>
+        <BeerName>{isLoading ? 'Loading...' : beer.name}</BeerName>
+        <Abv>{abv}</Abv>
       </Header>
       <Description>
         <p>{beer.description}</p>

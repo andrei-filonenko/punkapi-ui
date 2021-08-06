@@ -15,7 +15,7 @@ const LoadingStateStyled = styled.div`
 
 export default function LoadingState({ children, ...rest }: Props) {
   return (
-    <LoadingStateStyled {...rest}>
+    <LoadingStateStyled role="alert" aria-busy="true" {...rest}>
       <Spinner className="spinner" />
       <div className="description">{children || 'Loading...'}</div>
     </LoadingStateStyled>

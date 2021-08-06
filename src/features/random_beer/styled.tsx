@@ -32,7 +32,7 @@ export const Header = tw.div`flex flex-col font-bold text-xl md:flex-row`
 
 export const BeerName = tw.h2`tracking-widest uppercase font-bold text-left m-3 text-xl mr-auto`
 
-export const Abv = tw.h3`px-3 italic font-serif oldstyle-nums my-3 text-left`
+export const Abv = tw.h3`px-3 italic font-serif oldstyle-nums my-3 text-left whitespace-nowrap`
 
 export const ActionButtons = styled.div`
   ${tw`flex space-x-3 mb-4 mt-auto pr-2 text-sm font-medium flex-col md:flex-row md:ml-3`}

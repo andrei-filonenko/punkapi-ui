@@ -7,7 +7,6 @@ import {
 import { IBeer } from './schema'
 import { RootState } from './store'
 import { getAllNonAlcoholicBeers } from '../features/random_beer/selectors'
-
 import { formatDate, pickRandom } from '../util'
 import beerApi, { getBeers } from './beerApi'
 
