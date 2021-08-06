@@ -68,6 +68,9 @@ Using number of libraries, typescript can be used to validate data, ensuring tha
 
 Context providers can be used for the same purpose, but stacked context providers complicates testing and preventing component redraws. Also redux toolkit has nice and time-saving slice abstraction keeping business logic co-located mitigating old issue with reduce where changes required updating too many components 
 
+The great alternative to Redux would be using libraries like [SWR](https://swr.vercel.app/) with experimental React <Suspense> but as it was demonstrated in this demo, most of the time manual approaches are not hard to implement and can provide maximum performance and we can just add a memoization wrapper around fetch to memoize responses based on HTTP headers with expiry/lru strategies. 
+
 ### Things left to do
+
 
 * Write unit tests for seearch and beer lists
