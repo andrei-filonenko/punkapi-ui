@@ -24,7 +24,7 @@ const EmptyStateStyled = styled.div`
 
 export default function EmptyState({ children, subject, ...rest }: Props) {
   return (
-    <EmptyStateStyled {...rest}>
+    <EmptyStateStyled role="alert" {...rest}>
       <div className="icon">∅</div>
       <div className="subject">{subject || 'No items loaded'}</div>
       <div className="description">{children}</div>

@@ -38,8 +38,11 @@ export async function getBeers(
   const resp = await getBeersForPage(params, page)
   const result = loaded.concat(resp)
   if (resp.length < 80) {
+    // return results only if the list is not
+    // populated with results
     return result
   }
+  // cycle while list is not exhausted
   return getBeers(queryParams, page + 1, result)
 }
 
