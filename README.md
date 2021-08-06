@@ -33,5 +33,15 @@ yarn start
 
 ## Things left to do
 
-* Write unit tests
-* Add loading and failure states for beer list
+* Write unit tests for seearch
+* Write tests for api and a reducer
+* Instead of making a better date parse, we can just add a date picker and combine it with a search field
+* Responnse caching:
+
+Plan is to add two maps or objects: nameSearches: Map<string, Set<Number>> and dateSearches: Set<string> the beerSlice reducer separately for dates and text searches. On every search we will cache the beers forever - recepies almost never change, alternatively after checking response headers, looks like .
+
+For date before search:
+1. Find maximum date looked up before
+2. Get all beers in the interval of [max_date_from_previous_search, current_serch_date] from punk api.
+   Store empty array if max_date is greater
+3. 

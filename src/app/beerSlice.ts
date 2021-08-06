@@ -7,7 +7,7 @@ import {
 import { IBeer } from './schema'
 import { RootState } from './store'
 import { getAllNonAlcoholicBeers } from '../features/random_beer/selectors'
-import { formatDate, pickRandom } from '../util'
+import { formatDate, parseUSDate, pickRandom } from '../util'
 import beerApi, { getBeers } from './beerApi'
 
 export interface Error {
@@ -15,6 +15,8 @@ export interface Error {
 }
 
 export interface IBeerState {
+  maxDate: number
+  nameSearches: { [key: string]: number[] }
   randomBeerState: 'idle' | 'loading' | 'failure'
   byId: { [id: number]: IBeer }
   randomBeer?: IBeer
@@ -26,6 +28,8 @@ export interface IBeerState {
 }
 
 export const initialState = {
+  nameSearches: {},
+  maxDate: 0,
   areBeersLoading: false,
   randomBeerState: 'idle',
   byId: {},
@@ -33,20 +37,89 @@ export const initialState = {
 
 type ApiConfig = { state: RootState }
 
-export const fetchBeersByName = createAsyncThunk<IBeer[], string, ApiConfig>(
-  'beers/fetchBeersByName',
-  (beer_name, thumpApi) => {
-    return getBeers({ beer_name }).catch(thumpApi.rejectWithValue)
-  }
-)
+function compareBeersById(a: IBeer, b: IBeer) {
+  if (a.id > b.id) return -1
+  if (a.id < b.id) return 1
+  return 0
+}
 
-export const fetchBeersByDate = createAsyncThunk<IBeer[], Date, ApiConfig>(
-  'beers/fetchBeersDate',
-  (d, thumpApi) => {
-    const brewed_before = formatDate(d)
-    return getBeers({ brewed_before }).catch(thumpApi.rejectWithValue)
+interface NameFetchReturnType {
+  name: string
+  beers: IBeer[]
+}
+
+export const fetchBeersByName = createAsyncThunk<
+  NameFetchReturnType,
+  string,
+  ApiConfig
+>('beers/fetchBeersByName', async (name, thumpApi) => {
+  const state = thumpApi.getState()
+  // get name by cache
+  // given that backend uses fuzzy search
+  // there is no way to construct a robust partial inclusion order
+  // for search results unless we have the exact distance function
+  // so caching just by search string
+  if (state.beers.nameSearches.hasOwnProperty(name.toUpperCase())) {
+    const beers = state.beers.nameSearches[name.toUpperCase()].map(
+      (id) => state.beers.byId[id]
+    )
+    return {
+      name,
+      beers,
+    }
   }
-)
+  const beers = await getBeers({ beer_name: name })
+  return { beers, name }
+})
+
+const cachedBeersBrewedBefore = (timestamp: number) => (state: RootState) => {
+  const beers = Object.values(state.beers.byId).filter((beer) => {
+    if (!beer.first_brewed) {
+      return false
+    }
+    const beerTs = parseUSDate(beer.first_brewed as string).getTime()
+    return beerTs < timestamp
+  })
+  beers.sort(compareBeersById)
+  return beers
+}
+interface DateFetchReturnType {
+  timestamp: number
+  beers: IBeer[]
+}
+
+// Caching in this action is done by benefiting from
+// the fact that dates are linearly ordered
+// so if query date is before previous date, the results are
+// already in the cache
+// otherwise we need only to fetch entries between these dates
+export const fetchBeersByDate = createAsyncThunk<
+  DateFetchReturnType,
+  Date,
+  ApiConfig
+>('beers/fetchBeersDate', async (query, thumpApi) => {
+  const timestamp = query.getTime()
+  const state = thumpApi.getState()
+  const currentTimestamp = state.beers.maxDate
+  let beers: IBeer[] = []
+  const brewed_before = formatDate(query)
+  if (currentTimestamp === 0) {
+    beers = await getBeers({ brewed_before })
+    // older beers must already be in the store
+  } else if (timestamp <= currentTimestamp) {
+    beers = cachedBeersBrewedBefore(timestamp)(state)
+  } else {
+    const brewedAfterDate = new Date(currentTimestamp)
+    const fromCache = cachedBeersBrewedBefore(brewedAfterDate.getTime())(state)
+    // retract one month to brewed after to get a closed interval
+    // FIXME: use moment-like library to deal with edge cases
+    brewedAfterDate.setMonth(brewedAfterDate.getMonth() - 1)
+    const brewed_after = formatDate(brewedAfterDate)
+    const missingBeers = await getBeers({ brewed_after, brewed_before })
+    beers = fromCache.concat(missingBeers)
+  }
+  return { beers, timestamp }
+})
 
 export const nonAlcoholicLoaded = createAction<void>('beers/nonAlcoholicLoaded')
 export const addBeers = createAction<IBeer[]>('beers/addBeers')
@@ -116,21 +189,41 @@ export const beerSlice = createSlice({
         state.randomBeerState = 'failure'
         state.randomBeerError = action.error
       })
-      .addCase(fetchBeersByDate.fulfilled, (state, action) => {
-        state.areBeersLoading = false
-        delete state.beerListError
-        state.displayItems = action.payload
-      })
+      .addCase(
+        fetchBeersByDate.fulfilled,
+        (state, { payload: { timestamp, beers } }) => {
+          // update cache
+          for (const beer of beers) {
+            state.byId[beer.id] = beer
+          }
+          state.areBeersLoading = false
+          delete state.beerListError
+          if (state.maxDate < timestamp) {
+            state.maxDate = timestamp
+          }
+          state.displayItems = beers
+        }
+      )
       .addCase(fetchBeersByName.fulfilled, (state, action) => {
         state.areBeersLoading = false
+        const beers = action.payload.beers
+        const name = action.payload.name.toUpperCase()
+        if (!state.nameSearches.hasOwnProperty(name)) {
+          // remember ids of searched beers
+          state.nameSearches[name] = action.payload.beers.map((b) => b.id)
+          // update cache
+          for (const beer of beers) {
+            state.byId[beer.id] = beer
+          }
+        }
         delete state.beerListError
-        state.displayItems = action.payload
+        state.displayItems = action.payload.beers
       })
       .addCase(fetchBeersByDate.pending, (state) => {
         delete state.beerListError
         state.areBeersLoading = true
       })
-      .addCase(fetchBeersByName.pending, (state, action) => {
+      .addCase(fetchBeersByName.pending, (state) => {
         delete state.beerListError
         state.areBeersLoading = true
       })
