@@ -23,25 +23,51 @@ yarn
 yarn start
 ``` 
 
+## Responnse caching
+
+The api rearly change, Http headers indicate that values are fresh for around 4 hours. In industrial app I'd parse the headers to invalidate cache but I assume here it is out of scope of the project. 
+
+### Random beer
+
+No caching is possible.
+
+### Random non-alcoholic beer
+
+We get all non-alcoholic beers during a first request.
+Then we are returning
+
+### By name
+
+Caching by full search string - just like a simple memoize, but we store only object ids to save memory. Other caching approaching won't work:
+due to fuzzy search we need exact metric to get a partial order of requests, assuming that fuzzy search is an implementation detail of the backend.
+
+### By Date
+
+Caching is very efficient there, we fetch only in interval [prev_date, query_date) or fetch nothing at all if query date is not present.
+
 ## Approaches used
 
-* Responsive design using tailwindcss utility classes
-* Typescript with run-time types used for validation of incomming json and user input
-* Hybrid css-in-js and functional css approach - provides easy style consistency without littering HTML with utility classes
-* State is managed by redux
-* Functional components with hooks
+### Responsive design using tailwindcss utility classes
 
-## Things left to do
+In my experience keeping UI consistent in a big project is not a trivial problem. Maybe 80% of UI is standard with components that can be taken directly from a UI lib, but very often frontent engineers sort of need a lot of interaction with designers to design a componets from the
+remaining 20% of cases.
 
-* Write unit tests for seearch
-* Write tests for api and a reducer
-* Instead of making a better date parse, we can just add a date picker and combine it with a search field
-* Responnse caching:
+Functional css (e.g. tailwindcss and tachyons.css) mitigates this problem by encoding design language into a formal system where component designer may make much fewer choices. For example we can only pick padding among 6 different sizes, we have only couple of options for border radius and Typography and colors are fixed. This may result in nice looking components out of box without even making visual design iterations,
+high-fedelity prototypes and overall ugly look and feel.
 
-Plan is to add two maps or objects: nameSearches: Map<string, Set<Number>> and dateSearches: Set<string> the beerSlice reducer separately for dates and text searches. On every search we will cache the beers forever - recepies almost never change, alternatively after checking response headers, looks like .
+### Hybrid css-in-js and functional css approach
 
-For date before search:
-1. Find maximum date looked up before
-2. Get all beers in the interval of [max_date_from_previous_search, current_serch_date] from punk api.
-   Store empty array if max_date is greater
-3. 
+Functional css has many benifits but it ultimately results in ugly, bloated and non-semantic html. It may be seen as an implementation detail, 
+but css-in-js macros can provide all the benifits of functional css without bloating the markup.
+
+### Typescript with run-time types used for validation of incomming json and user input
+
+Using number of libraries, typescript can be used to validate data, ensuring that a type actually describes parsed json or user input and not just wishfully assumes it. 
+
+### State is managed by redux
+
+Context providers can be used for the same purpose, but stacked context providers complicates testing and preventing component redraws. Also redux toolkit has nice and time-saving slice abstraction keeping business logic co-located mitigating old issue with reduce where changes required updating too many components 
+
+### Things left to do
+
+* Write unit tests for seearch and beer lists
