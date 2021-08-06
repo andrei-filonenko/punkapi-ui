@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { fetchRandomBeer } from '../../app/beerSlice'
 import { RootState } from '../../app/store'
 
-
 const getBeer = (state: RootState) => state.beers.randomBeer || null
 
 const getPanelState = (state: RootState) => state.beers.randomBeerState

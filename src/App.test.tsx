@@ -4,7 +4,6 @@ import { store } from './app/store'
 import App from './App'
 import { beer, loadBeerActionDone } from './test-utils/fixtures'
 
-
 describe('<App />', () => {
   test('Renders loading initially', () => {
     const rendered = render(
