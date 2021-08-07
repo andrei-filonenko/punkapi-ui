@@ -6,6 +6,11 @@ import { useAppSelector } from './app/hooks'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { fetchRandomBeer } from './app/beerSlice'
+import tw, { styled } from 'twin.macro'
+
+const PageLoading = styled.div`
+  ${tw`flex justify-center py-24`}
+`
 
 function App() {
   // app is fully loaded only when random beer query is done
@@ -20,7 +25,9 @@ function App() {
   return (
     <div className="App">
       {isAppLoading ? (
-        <LoadingState />
+        <PageLoading>
+          <LoadingState />
+        </PageLoading>
       ) : (
         <>
           <RandomBeer />
