@@ -5,9 +5,16 @@ import { SearchBar } from './SearchBar'
 import { SearchSectionContainer } from './styled'
 import { fetchBeersByDate, fetchBeersByName } from '../../app/beerSlice'
 import { useDispatch } from 'react-redux'
+import { RootState } from '../../app/store'
+import { useAppSelector } from '../../app/hooks'
+
+const getLoadingState = (state: RootState) => state.beers.areBeersLoading
+
 
 export default function BeerSearch() {
   const dispatch = useDispatch()
+
+  const isLoading = useAppSelector(getLoadingState)
 
   const [searchType, setSearchType] = useState('name')
   const [text, setText] = useState('')
@@ -62,17 +69,21 @@ export default function BeerSearch() {
 
   return (
     <SearchSectionContainer>
-      <form className="filter" onSubmit={handleSubmit}>
+      <form className="filter" role="search" onSubmit={handleSubmit}>
         <SearchBar
+          isLoading={isLoading}
           placeholder={
             searchType === 'date'
               ? 'Type a date beer brewed before e.g. 2019 or 2018-10'
-              : 'Beer'
+              : 'Search by beer name'
           }
           errorMessage={validationMessage}
           onChange={handleTextUpdate}
         />
-        <SearchTypeSelector onChangeValue={handleSearchType} />
+        <SearchTypeSelector 
+          isLoading={isLoading}
+          onChangeValue={handleSearchType}
+        />
       </form>
     </SearchSectionContainer>
   )

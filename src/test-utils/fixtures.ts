@@ -1,4 +1,5 @@
 import { IBeer } from '../app/schema'
+import range from 'lodash/range'
 
 export const beer: IBeer = {
   id: 227,
@@ -621,3 +622,13 @@ export const loadBeerActionDone = (b: IBeer = beer) => ({
     requestStatus: 'fulfilled',
   },
 })
+
+export const largeBeerList = (len: number): IBeer[] => range(1, len + 1)
+   .map(id => ({
+       ...beer,
+       id: id,
+       name: `name_${id}`,
+       description: `description_${id}`,
+       image_url: beer.image_url + '_' + id
+     }
+   ))

@@ -3,8 +3,10 @@ import { SearchTypeContainer } from './styled'
 
 export function SearchTypeSelector({
   onChangeValue,
+  isLoading,
 }: {
   onChangeValue: (value: string) => void
+  isLoading: boolean
 }) {
   const [value, setValue] = useState('name')
 
@@ -17,22 +19,27 @@ export function SearchTypeSelector({
   }
 
   return (
-    <SearchTypeContainer onChange={onChange}>
+    <SearchTypeContainer 
+      role="radiogroup"
+      onChange={onChange}
+      >
       <label>
         <input
           defaultChecked
+          disabled={isLoading}
           type="radio"
           className="form-radio"
-          name="accountType"
+          name="searchType"
           value="name"
         />
         <span>By Name</span>
       </label>
       <label>
         <input
+          disabled={isLoading}
           type="radio"
           className="form-radio"
-          name="accountType"
+          name="searchType"
           value="date"
         />
         <span>By Date</span>

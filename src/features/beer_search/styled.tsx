@@ -11,7 +11,7 @@ export const ErrorMessage = styled.span`
   ${tw`p-2 uppercase text-pink-600 text-xs`}
 `
 
-export const SearchBarContainer = styled.span`
+export const SearchBarContainer = styled.div`
   ${tw`bg-white shadow relative flex font-bold`}
 
   && > ${ErrorMessage} {
