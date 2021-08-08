@@ -1,11 +1,6 @@
 import React, { ReactNode } from 'react'
 import tw, { styled } from 'twin.macro'
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  children?: ReactNode
-  subject?: ReactNode
-}
-
 const EmptyStateStyled = styled.div`
   ${tw`flex flex-col justify-center text-gray-600 my-8 p-4`}
 
@@ -22,10 +17,21 @@ const EmptyStateStyled = styled.div`
   }
 `
 
-export default function EmptyState({ children, subject, ...rest }: Props) {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  children?: ReactNode
+  subject?: ReactNode
+  icon?:  ReactNode
+}
+
+export default function EmptyState({
+  children,
+  subject,
+  icon = '∅',
+  ...rest
+}: Props) {
   return (
     <EmptyStateStyled role="alert" {...rest}>
-      <div className="icon">∅</div>
+      <div className="icon">{icon}</div>
       <div className="subject">{subject || 'No items loaded'}</div>
       <div className="description">{children}</div>
     </EmptyStateStyled>

@@ -50,7 +50,7 @@ const emptyState = (
 )
 
 const initialState = (
-  <EmptyState subject="Find awesome beer recepies">
+  <EmptyState subject="Find awesome beer recepies" icon="🔎">
     Use search field to find the beer you like.
   </EmptyState>
 )
