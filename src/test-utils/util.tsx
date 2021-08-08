@@ -1,7 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { render as rtlRender } from '@testing-library/react'
+import {
+  render as rtlRender,
+  RenderResult as RtlRenderResult,
+} from '@testing-library/react'
+import queries from '@testing-library/dom/types/queries'
 import { Provider } from 'react-redux'
 import beerReducer from '../app/beerSlice'
+
+export type RenderResult = RtlRenderResult<typeof queries, HTMLElement>
 
 export function getImages() {
   return document.querySelectorAll('img') as NodeListOf<HTMLImageElement>

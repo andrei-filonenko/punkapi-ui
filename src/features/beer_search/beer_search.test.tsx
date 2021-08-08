@@ -1,6 +1,6 @@
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import { cleanup, render, fireEvent, waitFor } from '../../test-utils/util'
+import { cleanup, render, fireEvent, waitFor, RenderResult } from '../../test-utils/util'
 import BeerSearch from './BeerSearch'
 import userEvent from '@testing-library/user-event'
 import BeerList from './BeerList'
@@ -16,6 +16,9 @@ const server = setupServer(
     witness(query.toString())
     if (name === 'Corona Extra') {
       return res(ctx.json(largeBeerList(10)))
+    }
+    if (name === 'Corona Porter Stout') {
+      return res(ctx.json(largeBeerList(40)))
     }
     if (name === 'Guinness') {
       return res(ctx.json([]))
@@ -36,6 +39,19 @@ afterEach(() => {
   cleanup()
 })
 afterAll(() => server.close())
+
+async function doSearchBeer(rendered: RenderResult, beer: string) {
+  const searchField = rendered.getByRole('textbox')
+  userEvent.type(searchField, beer)
+  const btn = rendered.getByText(/find my beer/i) as HTMLButtonElement
+  fireEvent.click(btn)
+  await waitFor(() => {
+    return expect(btn).toBeDisabled()
+  })
+  await waitFor(() => {
+    return expect(btn.disabled).toEqual(false)
+  })
+}
 
 function renderComponent() {
   const rendered = render(
@@ -202,29 +218,15 @@ describe('beer search functionality', () => {
   })
 
   test('Empty state', async () => {
-    jest.clearAllMocks()
     const rendered = renderComponent()
-    const searchField = rendered.getByRole('textbox')
-    userEvent.type(searchField, 'Guinness')
-    const btn = rendered.getByText(/find my beer/i) as HTMLButtonElement
-    fireEvent.click(btn)
-    await waitFor(() => {
-      return expect(btn).toBeDisabled()
-    })
+    await  doSearchBeer(rendered, 'Guinness')
     const emptyState = await rendered.findByText(/NO BEERS FOUND/i)
     expect(emptyState).toBeInTheDocument()
   })
 
   test('Error state', async () => {
-    jest.clearAllMocks()
     const rendered = renderComponent()
-    const searchField = rendered.getByRole('textbox')
-    userEvent.type(searchField, 'Vodka')
-    const btn = rendered.getByText(/find my beer/i) as HTMLButtonElement
-    fireEvent.click(btn)
-    await waitFor(() => {
-      return expect(btn).toBeDisabled()
-    })
+    await doSearchBeer(rendered, 'Vodka')
     const emptyState = await rendered.findByText(/Error/i)
     expect(emptyState).toBeInTheDocument()
   })
