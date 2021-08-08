@@ -17,6 +17,9 @@ const server = setupServer(
     if (name === 'Corona Extra') {
       return res(ctx.json(largeBeerList(10)))
     }
+    if (name === 'Guinness') {
+      return res(ctx.json([]))
+    }
     if (date === '1-2015') {
       return res(ctx.json(largeBeerList(5)))
     }
@@ -196,5 +199,19 @@ describe('beer search functionality', () => {
     expect(witness).toHaveBeenCalledWith(
       'brewed_before=1-2015&page=1&per_page=80'
     )
+  })
+
+  test('Empty state', async () => {
+    jest.clearAllMocks()
+    const rendered = renderComponent()
+    const searchField = rendered.getByRole('textbox')
+    userEvent.type(searchField, 'Guinness')
+    const btn = rendered.getByText(/find my beer/i) as HTMLButtonElement
+    fireEvent.click(btn)
+    await waitFor(() => {
+      return expect(btn).toBeDisabled()
+    })
+    const emptyState = await rendered.findByText(/NO BEERS FOUND/i)
+    expect(emptyState).toBeInTheDocument()
   })
 })
