@@ -1,6 +1,12 @@
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import { cleanup, render, fireEvent, waitFor, RenderResult } from '../../test-utils/util'
+import {
+  cleanup,
+  render,
+  fireEvent,
+  waitFor,
+  RenderResult,
+} from '../../test-utils/util'
 import BeerSearch from './BeerSearch'
 import userEvent from '@testing-library/user-event'
 import BeerList from './BeerList'
@@ -219,7 +225,7 @@ describe('beer search functionality', () => {
 
   test('Empty state', async () => {
     const rendered = renderComponent()
-    await  doSearchBeer(rendered, 'Guinness')
+    await doSearchBeer(rendered, 'Guinness')
     const emptyState = await rendered.findByText(/NO BEERS FOUND/i)
     expect(emptyState).toBeInTheDocument()
   })
