@@ -214,4 +214,18 @@ describe('beer search functionality', () => {
     const emptyState = await rendered.findByText(/NO BEERS FOUND/i)
     expect(emptyState).toBeInTheDocument()
   })
+
+  test('Error state', async () => {
+    jest.clearAllMocks()
+    const rendered = renderComponent()
+    const searchField = rendered.getByRole('textbox')
+    userEvent.type(searchField, 'Vodka')
+    const btn = rendered.getByText(/find my beer/i) as HTMLButtonElement
+    fireEvent.click(btn)
+    await waitFor(() => {
+      return expect(btn).toBeDisabled()
+    })
+    const emptyState = await rendered.findByText(/Error/i)
+    expect(emptyState).toBeInTheDocument()
+  })
 })
