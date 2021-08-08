@@ -1,14 +1,6 @@
-import { Provider } from 'react-redux'
-import { store } from '../../app/store'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import {
-  cleanup,
-  render,
-  fireEvent,
-  waitFor,
-  screen,
-} from '@testing-library/react'
+import { cleanup, render, fireEvent, waitFor } from '../../test-utils/util'
 import BeerSearch from './BeerSearch'
 import userEvent from '@testing-library/user-event'
 import BeerList from './BeerList'
@@ -44,10 +36,10 @@ afterAll(() => server.close())
 
 function renderComponent() {
   const rendered = render(
-    <Provider store={store}>
+    <>
       <BeerSearch />
       <BeerList />
-    </Provider>
+    </>
   )
   return rendered
 }
@@ -174,9 +166,11 @@ describe('beer search functionality', () => {
     })
     // expect 10 beer cards
     const beerCard = rendered.getAllByRole('listitem')
+    expect(witness).toHaveBeenCalledTimes(1) // results are small
+    expect(witness).toHaveBeenCalledWith(
+      'beer_name=Corona+Extra&page=1&per_page=80'
+    )
     expect(beerCard).toHaveLength(10)
-
-    screen.debug()
   })
 
   test('Search beers by date', async () => {
@@ -202,7 +196,5 @@ describe('beer search functionality', () => {
     expect(witness).toHaveBeenCalledWith(
       'brewed_before=1-2015&page=1&per_page=80'
     )
-
-    screen.debug()
   })
 })
