@@ -65,13 +65,13 @@ export default function BeerList() {
   const isNotFound = !error && !isLoading && !isNeverLoaded && !beers.length
 
   return (
-    <BeerListContainer>
+    <BeerListContainer role="list">
       {error && <ErrorState>{error.message}</ErrorState>}
       {isNeverLoaded && initialState}
       {isNotFound && emptyState}
       {isLoading && loadingState}
       {beers.map((beer) => (
-        <BeerCardContainer state="idle" key={beer.id}>
+        <BeerCardContainer state="idle" key={beer.id} role="listitem">
           <ImgContainer className="h-auto">
             <img alt="" src={beer.image_url || DEFAULT_IMAGE} />
           </ImgContainer>

@@ -19,10 +19,7 @@ export function SearchTypeSelector({
   }
 
   return (
-    <SearchTypeContainer 
-      role="radiogroup"
-      onChange={onChange}
-      >
+    <SearchTypeContainer role="radiogroup" onChange={onChange}>
       <label>
         <input
           defaultChecked

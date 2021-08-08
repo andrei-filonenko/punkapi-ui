@@ -10,7 +10,6 @@ import { useAppSelector } from '../../app/hooks'
 
 const getLoadingState = (state: RootState) => state.beers.areBeersLoading
 
-
 export default function BeerSearch() {
   const dispatch = useDispatch()
 
@@ -74,13 +73,13 @@ export default function BeerSearch() {
           isLoading={isLoading}
           placeholder={
             searchType === 'date'
-              ? 'Type a date beer brewed before e.g. 2019 or 2018-10'
-              : 'Search by beer name'
+              ? 'Date the beer brewed before e.g. 2019 or 2018-10'
+              : 'Beer name'
           }
           errorMessage={validationMessage}
           onChange={handleTextUpdate}
         />
-        <SearchTypeSelector 
+        <SearchTypeSelector
           isLoading={isLoading}
           onChangeValue={handleSearchType}
         />

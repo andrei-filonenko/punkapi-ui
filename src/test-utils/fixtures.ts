@@ -623,12 +623,16 @@ export const loadBeerActionDone = (b: IBeer = beer) => ({
   },
 })
 
-export const largeBeerList = (len: number): IBeer[] => range(1, len + 1)
-   .map(id => ({
-       ...beer,
-       id: id,
-       name: `name_${id}`,
-       description: `description_${id}`,
-       image_url: beer.image_url + '_' + id
-     }
-   ))
+export const largeBeerList = (len: number): IBeer[] =>
+  range(1, len + 1).map((id) => {
+    id = id + 1
+    const year = 1850 + id
+    return {
+      ...beer,
+      id: id,
+      name: `name_${id}`,
+      brewed_before: `01/${year}`,
+      description: `description_${id}`,
+      image_url: beer.image_url + '_' + id,
+    }
+  })
